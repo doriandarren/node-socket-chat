@@ -31,6 +31,8 @@ npm install google-auth-library --save
 ## Run Server
 ```sh
 
+npm i
+
 npm run dev
 
 node app.js

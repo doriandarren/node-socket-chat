@@ -3,6 +3,8 @@ import { check } from "express-validator";
 import { authLoginController } from "../controllers/auth/authLoginController.js";
 import { validateFields } from "../middlewares/validate-fields.js";
 import { authGoogleController } from "../controllers/auth/authGoogleController.js";
+import { validateJWT } from "../middlewares/validate-jwt.js";
+import { renewTokenController } from "../controllers/auth/renewTokenController.js";
 
 
 const router = Router();
@@ -26,6 +28,12 @@ router.post('/google', [
     validateFields
 ], authGoogleController);
 
+
+
+// http://localhost:8080/api/auth/
+router.get('/', [ 
+    validateJWT 
+], renewTokenController);
 
 
 export default router;
