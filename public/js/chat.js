@@ -7,6 +7,11 @@ let socket = null;
 const validateJWT = async() => {
     const token = localStorage.getItem('token');
 
+    if(token.length <= 10){
+        window.location = 'index.html';
+        throw new Error("No hay token en el servidor");
+    }
+
     const resp = await fetch(url, {
         method: 'GET',
         headers: {
@@ -16,9 +21,22 @@ const validateJWT = async() => {
     });
 
     const { user: userDB, token: tokenDB } = await resp.json();
+    localStorage.setItem('token', tokenDB);
+    user = userDB;
 
-    console.log(userDB, tokenDB);
+    document.title = user.name;
 
+    await connectSocket();
+
+}
+
+
+const connectSocket = async() => {
+    const socket = io({
+        'extraHeaders': {
+            'x-token': localStorage.getItem('token')
+        }
+    });
 }
 
 
@@ -26,16 +44,8 @@ const main = async() => {
     
     await validateJWT();
 
-    if(token.length <= 10){
-        window.location = 'index.html';
-        throw new Error("No hay token en el servidor");
-    }
-
-
-    
 
 }
 
 
 main();
-//const socket = io();
