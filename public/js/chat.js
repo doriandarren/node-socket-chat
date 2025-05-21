@@ -2,6 +2,15 @@ const url = 'http://localhost:8080/api/auth/';
 let user = null;
 let socket = null;
 
+// Referencia HTML
+
+const txtUid = document.querySelector("#txtUid");
+const txtMessage = document.querySelector("#txtMessage");
+const ulUsers = document.querySelector("#ulUsers");
+const ulMessage = document.querySelector("#ulMessage");
+const btnExit = document.querySelector("#btnExit");
+
+
 
 //Validar el token del local Storage
 const validateJWT = async() => {
@@ -32,11 +41,34 @@ const validateJWT = async() => {
 
 
 const connectSocket = async() => {
-    const socket = io({
+    socket = io({
         'extraHeaders': {
             'x-token': localStorage.getItem('token')
         }
     });
+
+    socket.on('connect', () => {
+        console.log('Socket Online');
+    });
+    
+    socket.on('disconnect', () => {
+        console.log('Socket Offline');
+    });
+
+    socket.on('reciver-message', () => {
+
+    });
+
+
+    socket.on('active-users', () => {
+        
+    });
+
+
+    socket.on('private-message', () => {
+        
+    });
+
 }
 
 
