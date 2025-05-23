@@ -55,22 +55,22 @@ const connectSocket = async() => {
         console.log('Socket Offline');
     });
 
-    socket.on('reciver-message', () => {
-
-    });
+    socket.on('reciver-message', drawMessages );
 
 
     socket.on('active-users', drawUsers );
 
 
-    socket.on('private-message', () => {
+    socket.on('private-message', (payload) => {
         
+        console.log('Privado: ', payload);
+
     });
 
 }
 
 
-const drawUsers = async(users = []) => {
+const drawUsers = (users = []) => {
 
     let usersHTML = '';
     
@@ -91,6 +91,47 @@ const drawUsers = async(users = []) => {
     ulUsers.innerHTML = usersHTML;
 
 }
+
+
+const drawMessages = (messages = []) => {
+
+    let messagesHTML = '';
+
+    console.log(messages);
+    
+    messages.forEach( ({ name, message }) => {
+
+        messagesHTML += `
+            <li>
+                <p>
+                    <span class="text-primary">${ name }</span>
+                    <span>${ message }</span>
+                </p>
+            </li>
+
+        `;
+
+    });
+
+    ulMessage.innerHTML = messagesHTML;
+
+}
+
+
+txtMessage.addEventListener('keyup', ({ keyCode }) => {
+
+    const message = txtMessage.value;
+    const uid = txtUid.value;
+
+    if(keyCode !== 13) { return; }
+
+    if( message.length === 0) { return; }
+
+    socket.emit('send-message', { message, uid });
+
+    txtMessage.value = '';
+
+});
 
 
 const main = async() => {
